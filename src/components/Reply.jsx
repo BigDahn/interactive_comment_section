@@ -1,53 +1,78 @@
 import { useState } from "react";
 
-const Reply = ({ currentUser, newReply, setnewReply, update, setUpdate }) => {
+const Reply = ({
+  currentUser,
+  newReply,
+  setnewReply,
+  update,
+  setUpdate,
+  setcommmentreply,
+  commmentreply,
+}) => {
   const [reply, setReply] = useState("");
   const { image } = currentUser;
-  const { id, user, replies } = newReply;
-  const [replyingTo, setReplyingTo] = useState();
+  const { id, user } = newReply;
 
   const replyButton = (e) => {
     e.preventDefault();
+
     if (!reply) return;
+
+    const timestamp = new Date();
+    const timeDifference = Math.floor((Date.now() - timestamp) / 1000);
+    let timeText;
+    if (timeDifference < 60) {
+      timeText = "few seconds ago";
+    } else if (timeDifference < 3600) {
+      const minutes = Math.floor(timeDifference / 60);
+      timeText = `${minutes} minute${minutes !== 1 ? "s" : ""} ago`;
+    } else if (timeDifference < 86400) {
+      const hours = Math.floor(timeDifference / 3600);
+      timeText = `${hours} hour${hours !== 1 ? "s" : ""} ago`;
+    } else {
+      const days = Math.floor(timeDifference / 86400);
+      timeText = `${days} day${days !== 1 ? "s" : ""} ago`;
+    }
+
+    //const id = Math.floor(Math.random() * 4 + 5 * 2);
     const recentReply = {
-      id: 20,
+      id: Date.now().toString(36) + Math.random().toString(36),
       content: reply,
-      createdAt: "few seconds ago",
+      createdAt: timeText,
       score: 1,
       replyingTo: user.username,
       user: currentUser,
     };
 
-    const newUpdate = update.map((d) => {
-      if (d.id === id) {
-        return {
-          ...d,
-          replies: [recentReply, ...d.replies],
-        };
-      }
-      if (d.id !== id) {
-        const { replies } = d;
+    console.log(recentReply);
 
-        let newReply = replies.map((r) => {
-          if (r.id === id) {
+    let newUpdate = update.map((comment) => {
+      if (comment.id === id) {
+        return {
+          ...comment,
+          replies: [recentReply, ...comment.replies],
+        };
+      } else if (comment.id !== id) {
+        comment.replies = comment.replies.map((reply) => {
+          if (reply.id === id) {
+            setcommmentreply([recentReply]);
             return {
-              ...r,
-              replies: [recentReply],
+              ...reply,
+              replies: [recentReply, ...commmentreply],
             };
           }
-          return r;
+          return reply;
         });
-
         return {
-          ...d,
-          replies: newReply,
+          ...comment,
+          replies: [...comment.replies],
         };
       }
-      return d;
+      return comment;
     });
+    console.log(newUpdate);
     let result = newUpdate;
     setUpdate(result);
-    console.log(result);
     setReply("");
     setnewReply();
   };

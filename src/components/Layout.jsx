@@ -1,11 +1,20 @@
-import { useEffect, useState } from "react";
-import { comments, currentUser } from "../../data.json";
+import { useState } from "react";
+import { currentUser } from "../../data.json";
 import Input from "./Input";
 import Reply from "./Reply";
+import Edit from "./Edit";
 
-const Layout = () => {
-  const [update, setUpdate] = useState(comments);
+const Layout = ({
+  update,
+  setUpdate,
+  replydeleteButton,
+  commmentreply,
+  setcommmentreply,
+}) => {
   const [newReply, setnewReply] = useState();
+
+  const [edit, setedit] = useState(false);
+  const [editId, seteditId] = useState();
 
   const replyButton = (id) => {
     const Reply = update.find((user) => {
@@ -29,11 +38,8 @@ const Layout = () => {
   };
 
   const editButton = (id) => {
-    console.log(id);
-  };
-
-  const deleteButton = (id) => {
-    console.log(id);
+    setedit(true);
+    seteditId(id);
   };
 
   const increaseButton = (id) => {
@@ -102,7 +108,7 @@ const Layout = () => {
         const { id, content, createdAt, score, user, replies } = comment;
 
         return (
-          <>
+          <main key={id}>
             <section className="flex flex-col gap-3">
               <section
                 key={id}
@@ -151,7 +157,7 @@ const Layout = () => {
                       {user.username === "juliusomo" ? (
                         <button
                           className="flex gap-x-0.5  cursor-pointer  text-center text-red-600/65 font-black"
-                          onClick={() => deleteButton(id)}
+                          onClick={() => replydeleteButton(id)}
                         >
                           {" "}
                           <img src="/Images/Icons/icon-delete.svg" /> Delete{" "}
@@ -179,7 +185,19 @@ const Layout = () => {
                     </div>
                   </article>
 
-                  <p className="w-[23rem]  text-justify">{content}</p>
+                  <div>
+                    {edit && editId === id ? (
+                      <Edit
+                        editId={editId}
+                        setedit={setedit}
+                        content={content}
+                        update={update}
+                        setUpdate={setUpdate}
+                      />
+                    ) : (
+                      <p className="w-[23rem]  text-justify">{content}</p>
+                    )}
+                  </div>
                 </div>
               </section>
               {newReply?.id === id && (
@@ -247,7 +265,7 @@ const Layout = () => {
                               {user.username === "juliusomo" ? (
                                 <button
                                   className="flex gap-x-0.5  cursor-pointer  text-center text-red-600/65 font-black"
-                                  onClick={() => deleteButton(id)}
+                                  onClick={() => replydeleteButton(id)}
                                 >
                                   {" "}
                                   <img src="/Images/Icons/icon-delete.svg" />{" "}
@@ -276,17 +294,28 @@ const Layout = () => {
                               )}
                             </div>
                           </article>
-
-                          <p className="w-[23rem]  text-justify">
-                            {" "}
-                            <span className="text-[#5457b6] font-extrabold">
-                              @{replyingTo}
-                            </span>{" "}
-                            {content}
-                          </p>
+                          <div>
+                            {edit && editId === id ? (
+                              <Edit
+                                editId={editId}
+                                setedit={setedit}
+                                content={content}
+                                update={update}
+                                setUpdate={setUpdate}
+                              />
+                            ) : (
+                              <p className="w-[23rem]  text-justify">
+                                {" "}
+                                <span className="text-[#5457b6] font-extrabold">
+                                  @{replyingTo}
+                                </span>{" "}
+                                {content}
+                              </p>
+                            )}
+                          </div>
                         </div>
                       </div>
-                      <div>
+                      <div className="grid gap-3">
                         {replies?.map((d) => {
                           const {
                             content,
@@ -341,7 +370,7 @@ const Layout = () => {
                                       {user.username === "juliusomo" ? (
                                         <button
                                           className="flex gap-x-0.5  cursor-pointer  text-center text-red-600/65 font-black"
-                                          onClick={() => deleteButton(id)}
+                                          onClick={() => replydeleteButton(id)}
                                         >
                                           {" "}
                                           <img src="/Images/Icons/icon-delete.svg" />{" "}
@@ -390,6 +419,8 @@ const Layout = () => {
                           currentUser={currentUser}
                           newReply={newReply}
                           setnewReply={setnewReply}
+                          commmentreply={commmentreply}
+                          setcommmentreply={setcommmentreply}
                           update={update}
                           setUpdate={setUpdate}
                         />
@@ -399,7 +430,7 @@ const Layout = () => {
                 })}
               </div>
             </section>
-          </>
+          </main>
         );
       })}
       <Input currentUser={currentUser} setUpdate={setUpdate} update={update} />
