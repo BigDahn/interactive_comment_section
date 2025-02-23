@@ -39,8 +39,17 @@ const Input = ({ currentUser, setUpdate, update }) => {
   };
 
   return (
-    <form className="flex items-start gap-3 px-4 py-3 w-[30rem] bg-white  rounded-md">
-      <img src={image.png} alt="img" width={30} />
+    <form className="grid w-[20rem] lg:flex items-start gap-3 px-4 py-3 lg:w-[30rem] bg-white  rounded-md">
+      <img src={image.png} alt="img" width={30} className="hidden lg:flex" />
+      <div className="order-last flex justify-between lg:hidden">
+        <img src={image.png} alt="img" width={30} />
+        <button
+          className="rounded-sm bg-[#5457b6] px-2 py-0.5 text-white uppercase font-black  "
+          onClick={handleSubmit}
+        >
+          send
+        </button>
+      </div>
       <textarea
         rows={3}
         cols={50}
@@ -51,7 +60,7 @@ const Input = ({ currentUser, setUpdate, update }) => {
         onChange={(e) => setContent(e.target.value)}
       />
       <button
-        className="rounded-sm bg-[#5457b6] px-2 py-0.5 text-white uppercase font-black "
+        className="hidden lg:flex lg:rounded-sm bg-[#5457b6] px-2 py-0.5 text-white uppercase font-black  "
         onClick={handleSubmit}
       >
         send

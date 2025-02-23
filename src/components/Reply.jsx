@@ -78,8 +78,18 @@ const Reply = ({
   };
 
   return (
-    <form className="flex items-start gap-3 px-4 py-3 w-[30rem] bg-white  rounded-md">
-      <img src={image.png} alt="img" width={30} />
+    <form className="grid w-[20rem] lg:flex lg:items-start gap-3 px-4 py-3 lg:w-[30rem] bg-white  rounded-md">
+      <div className="order-last flex justify-between lg:hidden">
+        <img src={image.png} alt="img" width={30} />
+        <button
+          className="rounded-sm bg-[#5457b6] px-2 py-0.5 text-white uppercase font-black "
+          onClick={replyButton}
+        >
+          Reply
+        </button>
+      </div>
+      <img src={image.png} alt="img" width={30} className="hidden lg:flex" />
+
       <input
         className="w-full h-20 pb-13 pl-2 border-1 border-gray-200 outline-0  "
         placeholder={`@${user.username}`}
@@ -88,7 +98,7 @@ const Reply = ({
         onChange={(e) => setReply(e.target.value)}
       />
       <button
-        className="rounded-sm bg-[#5457b6] px-2 py-0.5 text-white uppercase font-black "
+        className="hidden lg:flex lg:rounded-sm lg:bg-[#5457b6] px-2 py-0.5 text-white uppercase font-black "
         onClick={replyButton}
       >
         Reply

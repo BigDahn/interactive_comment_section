@@ -50,7 +50,7 @@ const Edit = ({ content, setedit, editId, update, setUpdate }) => {
     setedit(false);
   };
   return (
-    <form className="grid gap-3 place-items-end pt-3">
+    <form className="grid gap-3 place-items-end pt-3 w-[18rem] lg:w-full">
       <textarea
         rows={3}
         cols={50}
