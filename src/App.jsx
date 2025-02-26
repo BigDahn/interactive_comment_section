@@ -2,31 +2,18 @@ import { useEffect, useState } from "react";
 import Layout from "./components/Layout";
 import Modal from "./components/Modal";
 import Loading from "./components/Loading";
-
-const url = "data.json";
+import data from "../data.json";
 const App = () => {
   const [openModal, setOpenModal] = useState(false);
-  const [update, setUpdate] = useState({});
+  const [update, setUpdate] = useState(data);
   const [deleteId, setDeleteId] = useState();
   const [commmentreply, setcommmentreply] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const display = async () => {
-    let data = "";
-    try {
-      setLoading(true);
-      const response = await fetch(url);
-      data = await response.json();
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setUpdate(data);
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    display();
+    setTimeout(() => {
+      setLoading(false);
+    }, 1000);
   }, []);
 
   const replydeleteButton = (id) => {
