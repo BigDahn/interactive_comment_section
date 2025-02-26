@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const Input = ({ currentUser, setUpdate, update }) => {
+const Input = ({ currentUser, setUpdate, comments }) => {
   const { image } = currentUser;
 
   const [content, setContent] = useState("");
@@ -24,17 +24,20 @@ const Input = ({ currentUser, setUpdate, update }) => {
       timeText = `${days} day${days !== 1 ? "s" : ""} ago`;
     }
 
-    const comment = {
-      id: Date.now().toString(36) + Math.random().toString(36),
-      content: content,
-      createdAt: timeText,
-      score: 1,
-      replies: [],
-      user: currentUser,
-    };
-    const newUpdate = [...update, comment];
-
-    setUpdate(newUpdate);
+    setUpdate({
+      currentUser,
+      comments: [
+        ...comments,
+        {
+          id: Date.now().toString(36) + Math.random().toString(36),
+          content: content,
+          createdAt: timeText,
+          score: 1,
+          replies: [],
+          user: currentUser,
+        },
+      ],
+    });
     setContent("");
   };
 

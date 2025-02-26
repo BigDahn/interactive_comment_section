@@ -1,6 +1,13 @@
 import { useState } from "react";
 
-const Edit = ({ content, setedit, editId, update, setUpdate }) => {
+const Edit = ({
+  content,
+  setedit,
+  editId,
+  comments,
+  setUpdate,
+  currentUser,
+}) => {
   const [reEdit, setreEdit] = useState(content);
 
   const reEditbutton = (e) => {
@@ -22,31 +29,49 @@ const Edit = ({ content, setedit, editId, update, setUpdate }) => {
       timeText = `${days} day${days !== 1 ? "s" : ""} ago`;
     }
 
-    const newUpdate = update.map((d) => {
-      if (d.id === editId) {
-        return {
-          ...d,
-          content: reEdit,
-          createdAt: timeText,
-        };
-      }
-      let dw = d.replies.map((reply) => {
-        if (reply.id === editId) {
-          return {
-            ...reply,
-            content: reEdit,
-            createdAt: timeText,
-          };
-        }
-        return reply;
-      });
-      return {
-        ...d,
-        replies: [...dw],
-      };
-    });
+    setUpdate({
+      currentUser,
+      comments: comments
+        .map((comment) => {
+          comment.replies = comment.replies.map((r) => {
+            if (r.id === editId) {
+              return {
+                ...r,
+                content: reEdit,
+                createdAt: timeText,
+              };
+            }
+            return r;
+          });
 
-    setUpdate(newUpdate);
+          comment.replies = comment.replies.map((p) => {
+            if (p.replies && p.replies.length > 0) {
+              p.replies = p.replies.map((r) => {
+                if (r.id === editId) {
+                  return {
+                    ...r,
+                    content: reEdit,
+                    createdAt: timeText,
+                  };
+                }
+                return r;
+              });
+            }
+            return p;
+          });
+          return comment;
+        })
+        .map((d) => {
+          if (d.id === editId) {
+            return {
+              ...d,
+              content: reEdit,
+              createdAt: timeText,
+            };
+          }
+          return d;
+        }),
+    });
     setedit(false);
   };
   return (

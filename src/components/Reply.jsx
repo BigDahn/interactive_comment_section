@@ -4,7 +4,7 @@ const Reply = ({
   currentUser,
   newReply,
   setnewReply,
-  update,
+  comments,
   setUpdate,
   setcommmentreply,
   commmentreply,
@@ -44,36 +44,35 @@ const Reply = ({
       user: currentUser,
     };
 
-    console.log(recentReply);
-
-    let newUpdate = update.map((comment) => {
-      if (comment.id === id) {
-        return {
-          ...comment,
-          replies: [recentReply, ...comment.replies],
-        };
-      } else if (comment.id !== id) {
-        comment.replies = comment.replies.map((reply) => {
-          if (reply.id === id) {
-            setcommmentreply([recentReply]);
-            return {
-              ...reply,
-              replies: [recentReply, ...commmentreply],
-            };
-          }
-          return reply;
-        });
-        return {
-          ...comment,
-          replies: [...comment.replies],
-        };
-      }
-      return comment;
+    setUpdate({
+      currentUser,
+      comments: comments.map((comment) => {
+        if (comment.id === id) {
+          return {
+            ...comment,
+            replies: [recentReply, ...comment.replies],
+          };
+        } else if (comment.id !== id) {
+          comment.replies = comment.replies.map((reply) => {
+            if (reply.id === id) {
+              setcommmentreply([recentReply]);
+              return {
+                ...reply,
+                replies: [recentReply, ...commmentreply],
+              };
+            }
+            return reply;
+          });
+          return {
+            ...comment,
+            replies: [...comment.replies],
+          };
+        }
+        return comment;
+      }),
     });
-    console.log(newUpdate);
-    let result = newUpdate;
-    setUpdate(result);
     setReply("");
+
     setnewReply();
   };
 
