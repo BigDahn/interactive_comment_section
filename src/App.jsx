@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import Layout from "./components/Layout";
 import Modal from "./components/Modal";
 import Loading from "./components/Loading";
+
+const url = "data.json";
 const App = () => {
   const [openModal, setOpenModal] = useState(false);
   const [update, setUpdate] = useState({});
@@ -13,7 +15,7 @@ const App = () => {
     let data = "";
     try {
       setLoading(true);
-      const response = await fetch("data.json");
+      const response = await fetch(url);
       data = await response.json();
     } catch (error) {
       console.log(error);
